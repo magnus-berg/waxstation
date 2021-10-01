@@ -1,4 +1,4 @@
-# waxstation
+# WAXstation
 
 The purpose of this project is to make the process of waxing a bike chain a bit easier.
 
@@ -22,7 +22,7 @@ The modes are:
 
 
 
-##Settings
+### Settings
 You activate the settings by pressing button 1 and 4 simultaniously.
 This will activate the settings view where you can edit the following:
 - High and low temperature: can be set between 50 and 100 degrees
@@ -44,4 +44,5 @@ Mean Well RS-15-5 - Power supply
 
 
 ## Case
-The case is 3D-printed and screwed together. The repo inlcudes both STL-files but also the source-files made with OpenSCAD.
+The case is 3D-printed and screwed together. At the moment there are only source-files 
+made with OpenSCAD but the plan is to include STL-files too.
