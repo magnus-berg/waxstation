@@ -6,9 +6,10 @@ import sfb_14
 import usys
 
 class Display:
-    def __init__(self, sda, scl):
+    def __init__(self, i2c):
         #try:
-        i2c = I2C(1, sda=sda, scl=scl, freq=400000)
+        #i2c = I2C(1, sda=sda, scl=scl, freq=400000)
+        
         self.display = DisplayDriver(128, 64, i2c, None, 0x3c)
         self.display.rotate(0x01)
         self.display.sleep(False)

@@ -74,6 +74,7 @@ class MLX90614(SensorBase):
 		self.i2c = i2c
 		self.address = address
 		_config1 = i2c.readfrom_mem(address, 0x25, 2)
+		print(_config1)
 		_dz = ustruct.unpack('<H', _config1)[0] & (1<<6)
 		self.dual_zone = True if _dz else False
 

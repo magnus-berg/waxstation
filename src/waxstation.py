@@ -43,11 +43,10 @@ class WaxStation:
         self.loPin = pins['loPin']
         self.hiPin = pins['hiPin']
         self.autoPin = pins['autoPin']
-        self.sdaPin = pins['sdaPin']
-        self.sclPin = pins['sclPin']
+        self.i2c = pins['i2c']
         self.relayPin = pins['relayPin']
         self.input = Input([self.autoPin, self.hiPin, self.loPin, self.offPin])
-        self.display = Display(self.sdaPin, self.sclPin)
+        self.display = Display(self.i2c)
         self.view = OffView(self)
         self.thermometer = thermometer
         self.power = 0

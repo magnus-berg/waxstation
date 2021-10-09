@@ -19,6 +19,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import time
 import onewire, ds18x20
 import mlx90614
+import utime
         
 class Thermometer:
     def __init__(self, dsPin):
@@ -61,9 +62,12 @@ class Thermometer:
                 return self.settings.lo.value
             else:
                 k = (self.settings.calibrationHi.value-self.settings.calibrationLo.value) / difference
-                return k * (self.temperatur-self.settings.calibrationLo.value) + self.settings.calibrationLo.value
+                return k * (self.temperature-self.settings.calibrationLo.value) + self.settings.calibrationLo.value
                 
     def calibratedTemp(self):
+        if self.__initTemperature == None:
+            self.read()
+            return -127
         if self.settings == None:
             return -127
         
@@ -72,14 +76,16 @@ class Thermometer:
 class IR_Thermometer(Thermometer):
     def __init__(self, i2c):
         self.sensor = mlx90614.MLX90614(i2c)
-        self.read()
         self.temperature = -127
         self.lastCheck = time.ticks_ms()
         self.settings = None
-        self.__initTemperature =  None
-        
+        self.__initTemperature = None
+        self.read()
 
     def read(self):
-        self.temperature = sensor.read_object_temp()
+        self.temperature = int(self.sensor.object_temp)
+        #self.temperature = int(self.sensor.ambient_temp)
+        #print(self.temperature)
         if self.__initTemperature == None:
-            self.__initTemperature == self.temperature
+            self.__initTemperature = self.temperature
+            
