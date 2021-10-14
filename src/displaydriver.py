@@ -108,3 +108,28 @@ class DisplayDriver(framebuf.FrameBuffer):
         Writer.set_textpos(self, y, x)
         self.writer.printstring(string)
 
+
+class DBuffer(framebuf.FrameBuffer):
+    def __init__(self, width=128, height=128):
+        super
+        self.width = width
+        self.height = height
+        self.pages = self.height // 8
+        self.buffer = bytearray(self.pages * self.width)
+        
+        self.temp = bytearray(2)
+ 
+        super().__init__(self.buffer, self.width, self.height, framebuf.MVLSB)
+
+
+    def setFont(self, font):
+        self.writer = Writer(self, font, False)
+
+    def text(self, string, x, y):
+        Writer.set_textpos(self, y, x)
+        self.writer.printstring(string)
+
+    def centeredText(self, string, y):
+        size = self.writer.stringlen(string)
+        x = int((self.width-size)/2)
+        self.text(string, x, y)

@@ -20,10 +20,12 @@ class Display:
     def flashScreen(self):
         self.display.setFont(sfb_14)
         #self.display.blit(ImageBuffer().getLogo(), 0, 10)
-        self.display.blit(ImageBuffer().getImage('logo'), 0, 10)
+        self.display.blit(ImageBuffer().getImage('logo'), 0, 0)
         self.display.show()
         sleep(300)
-        self.display.text("WAXstation", 23, 50)
+        #self.display.text("WAXstation", 23, 40)
+        self.display.text("WAXstation 1000", 1, 40)
+        self.display.text("v1.0", 44, 92)
         self.display.show()
         sleep(1500)
         

@@ -10,11 +10,11 @@ edgeScrewDistance = 7;
 lidHolePts = [
 	[edgeScrewDistance, edgeScrewDistance, -135],
 	[boxSize.x-edgeScrewDistance, edgeScrewDistance, -45],
-	[edgeScrewDistance, boxSize.y-edgeScrewDistance, 135],
 	[boxSize.x-edgeScrewDistance, boxSize.y-edgeScrewDistance, 45],
+	[edgeScrewDistance, boxSize.y-edgeScrewDistance, 135],
 ];
 
-bottom(boxSize);
+//bottom(boxSize);
 walls(boxSize);
 
 
@@ -45,7 +45,7 @@ module tinsert(msize){
 
 }
 
-extension(boxSize);
+//extension(boxSize);
 module extension(size){
 	circleCenter = [boxSize.x/2, -1, -235/2-4];
 
@@ -60,21 +60,22 @@ module extension(size){
 			}
 			
 			translate([0, 0, -size.z]) linear_extrude(size.z) hull(){
-				translate([10, 0, 0]) square([10, 10]);
-				translate([10, size.y-10, 0]) square([10, 10]);
+				translate([15, 0, 0]) square([10, 10]);
+				translate([15, size.y-10, 0]) square([10, 10]);
 				translate([5, size.y-5, 0]) circle(5);
 				translate([5, 5, 0]) circle(5);
 			}
 			translate([0, 0, -size.z]) linear_extrude(size.z) hull(){
-				translate([size.x-20, 0, 0]) square([10, 10]);
-				translate([size.x-20, size.y-10, 0]) square([10, 10]);
+				translate([size.x-25, 0, 0]) square([10, 10]);
+				translate([size.x-25, size.y-10, 0]) square([10, 10]);
 				translate([size.x-5, size.y-5, 0]) circle(5);
 				translate([size.x-5, 5, 0]) circle(5);
 			}
 			
 		}
 		// remove space for the psu-bracket
-		translate([30, size.y/2, 0.1]) rotate([-90, 0, 90]) linear_extrude(20) polygon([[-8, 0], [-8, 3], [0, 11], [8, 3], [8, 0]]);
+		translate([30, size.y/2, 0.1]) rotate([-90, 0, 90]) linear_extrude(20) polygon([[-8, 0], [-8, 20], [8, 20], [8, 0]]);
+		//polygon([[-8, 0], [-8, 3], [0, 11], [8, 3], [8, 0]]);
 		
 		translate(circleCenter) rotate([0, -35.5, 0]) translate([0, 17, 123]) {
 			linear_extrude(100) circle(4.5);
@@ -96,18 +97,18 @@ module extension(size){
 		circleSize=5;
 		holeSize=4.1;
 		circleHeight=size.z-10;
-		translate([0, 0, -100]) linear_extrude(92){
+		/*translate([0, 0, -100]) linear_extrude(92){
 			translate([circleSize+2, circleSize+2]) circle(holeSize);
 			translate([circleSize+2, size.y -circleSize-2]) circle(holeSize);
 			translate([size.x - circleSize -2, size.y -circleSize-2]) circle(holeSize);
 			translate([size.x - circleSize -2, circleSize+2]) circle(holeSize);
-		}
+		}*/
 
-		translate([0, 0, -10]) linear_extrude(11){
-			translate([circleSize+2, circleSize+2]) circle(boxMountingHolePlusSize);
-			translate([circleSize+2, size.y -circleSize-2]) circle(boxMountingHolePlusSize);
-			translate([size.x - circleSize -2, size.y -circleSize-2]) circle(boxMountingHolePlusSize);
-			translate([size.x - circleSize -2, circleSize+2]) circle(boxMountingHolePlusSize);
+		translate([0, 0, -100]) linear_extrude(110){
+			translate([circleSize+2+10, circleSize+2+5]) circle(boxMountingHolePlusSize-0.4);
+			translate([circleSize+2+10, size.y -circleSize-2]) circle(boxMountingHolePlusSize-0.4);
+			translate([size.x - circleSize -2-10, size.y -circleSize-2]) circle(boxMountingHolePlusSize-0.4);
+			translate([size.x - circleSize -2-10, circleSize+2+5]) circle(boxMountingHolePlusSize-0.4);
 		}
 
 		translate(circleCenter) rotate([-90, 0, 0]) linear_extrude(120) circle(235/2+2);
@@ -126,12 +127,32 @@ module waxstation(){
 module walls(size){
 	wallThickness=2;
 	union(){
-		for (p = lidHolePts) translate([p.x, p.y, size.z-4]) rotate([0, 0, p.z]) tinsert(3);
+		for (i = [0:3]){
+ 			mountPt = lidHolePts[i];
+ 			difference(){
+	 			translate([mountPt.x, mountPt.y, size.z-4-15]) 
+	 				rotate([0, 0, i*90])
+	 					linear_extrude(15) hull(){
+	 						circle(6); 
+	 						translate([0, -6, 0]) square([6, 6]); 
+	 						translate([-6, 0, 0]) square([6, 6]); 
+	 					}
+				translate([mountPt.x, mountPt.y, size.z-4-20])  linear_extrude(25) circle(1.4); 				
+ 			}
+		}
+		//for (p = lidHolePts) translate([p.x, p.y, size.z-4-15]) rotate([0, 0, 0]) 
+
+		//linear_extrude(15) hull(){circle(6); square([6, 6]); translate([-6, -6, 0]) square([6, 6]);}
+		//tinsert(3);
 		difference(){
 			base(size);
 			translate([wallThickness, wallThickness, -1]) scale([(size.x-2*wallThickness)/size.x, (size.y-2*wallThickness)/size.y, 2]) base(size);
+			difference(){
+				translate([size.x-5, size.y-20, 2+17/2]) rotate([0, 90, 0]) linear_extrude(10) circle(11/2);
+				translate([size.x-5, size.y-25 - 11/2 +0.6, 2+17/2]) cube([10, 10, 10], center=true);
+			}
 		}
-
+	
 	}
 }
 
@@ -180,10 +201,10 @@ module bottom(size){
 
 		translate([0, 0, -1])
 		linear_extrude(circleHeight-6){
-			translate([circleSize+2, circleSize+2]) circle(boxMountingHolePlusSize); // 2.3
-			translate([circleSize+2, size.y -circleSize-2]) circle(boxMountingHolePlusSize);
-			translate([size.x - circleSize -2, size.y -circleSize-2]) circle(boxMountingHolePlusSize);
-			translate([size.x - circleSize -2, circleSize+2]) circle(boxMountingHolePlusSize);			
+			translate([circleSize+2+10, circleSize+2+5]) circle(boxMountingHolePlusSize); // 2.3
+			translate([circleSize+2+10, size.y -circleSize-2]) circle(boxMountingHolePlusSize);
+			translate([size.x - circleSize -2-10, size.y -circleSize-2]) circle(boxMountingHolePlusSize);
+			translate([size.x - circleSize -2-10, circleSize+2+5]) circle(boxMountingHolePlusSize);			
 		}
 	} // difference
 	

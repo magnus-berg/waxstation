@@ -39,7 +39,8 @@ class OffView(BaseView):
     
     def update(self, buttons):
         state = BaseView.update(buttons)
-        
+        if buttons[0] and buttons[1] and buttons[2]:
+            return -99
         self.display.clear()
         self.display.setFont(sfb_20)
         self.display.text("Off", 20, 20)

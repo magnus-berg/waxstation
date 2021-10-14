@@ -53,6 +53,8 @@ class WaxStation:
         self.thermometer.settings = self.settings
         self.__powerTime = time.ticks_ms()
         self.powerled = Pin(25, Pin.OUT)
+        self.screenTimer = -1
+        
 
     def updatePower(self):
         timePassed = int((time.ticks_ms() - self.__powerTime)/1000)
@@ -67,7 +69,11 @@ class WaxStation:
             self.powerled.value(self.power)
             
     def run(self):
-        while True:
+        while self.state >= -1:
+            if self.screenTimer != 0 and self.screenTimer < time.ticks_ms() :
+                self.display.poweroff()
+                self.screenTimer = 0
+                
             self.thermometer.read()
             
             if self.thermometer.temperature != -127 and self.thermometer.calibratedTemp() < self.goalTemp():
@@ -87,8 +93,7 @@ class WaxStation:
                     self.view = OffView(self)
                     self.view.update(buttons)
                     self.relayPin.value(0)
-                    sleep(1000)
-                    self.display.poweroff()
+                    self.screenTimer = time.ticks_ms() + 3000
                 elif self.state == 1 or self.state == 2:
                     self.view = FixedTempView(self)
                 elif self.state == 3:
@@ -96,8 +101,10 @@ class WaxStation:
                 elif self.state == 4:
                     self.view = SettingsView(self)
 
-
-                        
+                if self.state != 0:
+                    self.screenTimer = 0
+        if self.state == -99:
+            return self.state
             
     def goalTemp(self):
         if self.state == 1:
